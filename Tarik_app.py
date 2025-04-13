@@ -127,6 +127,77 @@ st.header("📋 Actifs du portefeuille filtré")
 st.dataframe(actifs_filtres.reset_index(drop=True), use_container_width=True)
 
 # ======================
+# 📘 1. Explication de la stratégie ESG
+# ======================
+st.header("📘 Stratégie ESG du portefeuille")
+st.markdown("""
+Ce portefeuille est construit selon une approche **best-in-class**, qui consiste à sélectionner les entreprises ayant les meilleurs scores ESG dans leur secteur.
+
+La stratégie repose sur :
+- l'exclusion d'actifs au-delà d’un seuil ESG donné (score > 25 éliminés)
+- une pondération **inversement proportionnelle au risque ESG** (plus l’entreprise est vertueuse, plus elle est pondérée)
+- une sélection diversifiée de secteurs, zones géographiques et types d’actifs
+
+Les données ESG sont issues de la notation **Morningstar**, combinée à des certifications et alignements avec les **Objectifs de Développement Durable (ODD)**.
+""")
+
+# ======================
+# 🌿 2. Analyse de l'impact ESG
+# ======================
+st.header("🌿 Analyse d'impact ESG")
+if not actifs_filtres.empty:
+    score_moyen = round(actifs_filtres["Score ESG"].mean(), 2)
+    st.markdown(f"**Score ESG moyen du portefeuille :** `{score_moyen}`")
+
+    st.markdown("""
+    🔍 **Interprétation :** Un score ESG plus faible signifie un meilleur comportement extra-financier.
+    - < 15 : très faible risque ESG ✅
+    - 15 à 20 : risque modéré ⚠️
+    - > 20 : à surveiller ❗
+
+    De plus, les entreprises sont analysées en fonction de leurs contributions aux **ODD** :
+    """)
+    odd_series = actifs_filtres["ODD"].str.split(", ").explode().value_counts()
+    st.bar_chart(odd_series)
+else:
+    st.info("Aucun actif sélectionné pour analyser l'impact ESG.")
+
+# ======================
+# 🏷️ 3. Intégration des labels et réglementations
+# ======================
+st.header("🏷️ Labels et réglementations durables")
+st.markdown("""
+Certains actifs du portefeuille disposent de labels ou certifications qui renforcent leur engagement durable :
+
+- **ISO 14001** : management environnemental
+- **ISO 50001** : efficacité énergétique
+- **ISO 26000** : responsabilité sociétale
+- **B Corp**, **Entreprise à mission**, **CDP** : certifications extra-financières
+
+La composition respecte les objectifs de la **réglementation SFDR** en matière de transparence ESG. Elle pourrait aussi être compatible avec un label ISR (Investissement Socialement Responsable) en France.
+""")
+
+# ======================
+# 📊 4. Suivi combiné des performances financières et ESG
+# ======================
+st.header("📊 Tableau de bord ESG & financier")
+if not actifs_filtres.empty:
+    comparaison = actifs_filtres[["Nom", "Score ESG", "Poids"]].copy()
+    comparaison = comparaison.sort_values(by="Poids", ascending=False)
+    st.dataframe(comparaison.style.format({"Score ESG": "{:.2f}", "Poids": "{:.2%}"}), use_container_width=True)
+    st.markdown("""
+    Ce tableau permet de croiser la performance ESG des entreprises avec leur importance dans le portefeuille.
+    Il constitue un outil de **pilotage intégré** : durable et financier.
+    """)
+else:
+    st.info("Aucun actif sélectionné pour afficher le tableau ESG/Finance.")
+
+# ======================
+# Fin du rapport enrichi
+# ======================
+
+
+# ======================
 # Visualisation ESG
 # ======================
 st.header("📊 Visualisation ESG")
