@@ -168,7 +168,7 @@ if not actifs_filtres.empty:
     🔍 **Interprétation :** Un score ESG plus faible signifie un meilleur comportement extra-financier.
     - < 15 : très faible risque ESG 
     - 15 à 20 : risque modéré 
-    - > 20 : à surveiller 
+    - \\> 20 : à surveiller 
 
     De plus, les entreprises sont analysées en fonction de leurs contributions aux **ODD** :
     """)
