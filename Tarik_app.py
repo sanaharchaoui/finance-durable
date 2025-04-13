@@ -127,6 +127,21 @@ st.header("📋 Actifs du portefeuille filtré")
 st.dataframe(actifs_filtres.reset_index(drop=True), use_container_width=True)
 
 # ======================
+# 🧠 Notre choix : création d’un portefeuille personnalisé
+# ======================
+st.header("🧠 Notre approche : un portefeuille construit sur mesure")
+st.markdown("""
+Dans le cadre de ce projet, nous avons fait le choix de **ne pas sélectionner un fonds existant**, mais de construire **notre propre portefeuille durable** à partir d’une sélection d’actifs cotés et d’ETF labellisés.
+
+Notre démarche repose sur une volonté de :
+- **contrôler les critères ESG choisis** et les pondérations appliquées,
+- **analyser activement l’alignement avec les ODD** (Objectifs de Développement Durable),
+- et surtout de **tester une méthodologie personnelle** inspirée des meilleures pratiques en finance durable.
+
+Nous avons donc défini nos propres critères de filtrage : type d’actif, score ESG, certifications ISO, ODD, etc., et nous avons pondéré les actifs sélectionnés en fonction de leur performance extra-financière.
+""")
+
+# ======================
 # 📘 1. Explication de la stratégie ESG
 # ======================
 st.header("📘 Stratégie ESG du portefeuille")
