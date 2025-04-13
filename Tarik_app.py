@@ -129,7 +129,7 @@ st.dataframe(actifs_filtres.reset_index(drop=True), use_container_width=True)
 # ======================
 # 🧠 Notre choix : création d’un portefeuille personnalisé
 # ======================
-st.header("🧠 Notre approche : un portefeuille construit sur mesure")
+st.header("Notre approche : un portefeuille construit sur mesure")
 st.markdown("""
 Dans le cadre de ce projet, nous avons fait le choix de **ne pas sélectionner un fonds existant**, mais de construire **notre propre portefeuille durable** à partir d’une sélection d’actifs cotés et d’ETF labellisés.
 
@@ -166,9 +166,9 @@ if not actifs_filtres.empty:
 
     st.markdown("""
     🔍 **Interprétation :** Un score ESG plus faible signifie un meilleur comportement extra-financier.
-    - < 15 : très faible risque ESG ✅
-    - 15 à 20 : risque modéré ⚠️
-    - > 20 : à surveiller ❗
+    - < 15 : très faible risque ESG 
+    - 15 à 20 : risque modéré 
+    - > 20 : à surveiller 
 
     De plus, les entreprises sont analysées en fonction de leurs contributions aux **ODD** :
     """)
