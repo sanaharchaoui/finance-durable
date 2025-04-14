@@ -6,7 +6,6 @@ import numpy as np
 import datetime
 import plotly.express as px
 
-
 # ======================
 # Données ESG manuelles
 # ======================
