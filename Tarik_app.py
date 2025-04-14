@@ -177,20 +177,25 @@ if not actifs_filtres.empty:
 else:
     st.info("Aucun actif sélectionné pour analyser l'impact ESG.")
 
+
 # ======================
-# 🏷️ 3. Intégration des labels et réglementations
+# 🏷️ 3. Labels et certifications
 # ======================
-st.header("🏷️ Labels et réglementations durables")
+st.header("🏷️ Labels et certifications durables")
 st.markdown("""
-Certains actifs du portefeuille disposent de labels ou certifications qui renforcent leur engagement durable :
+Certains actifs du portefeuille disposent de **labels ou certifications reconnus**, renforçant leur crédibilité :
 
-- **ISO 14001** : management environnemental
-- **ISO 50001** : efficacité énergétique
-- **ISO 26000** : responsabilité sociétale
-- **B Corp**, **Entreprise à mission**, **CDP** : certifications extra-financières
+- **ISO 14001, 50001, 26000** : gestion environnementale, performance énergétique, responsabilité sociétale.
+- **B Corp**, **Entreprise à mission**, **CDP** : critères extra-financiers vérifiés par des entités indépendantes.
+- **Label ISR (France)** : notre portefeuille suit des principes similaires :
+    - exclusion des actifs avec un score ESG trop élevé,
+    - intégration ESG systématique dans la sélection,
+    - diversification sectorielle et géographique.
+- **Label Greenfin (France)** : via l’exposition aux **obligations vertes (Green Bonds)**, le portefeuille contribue au **financement de projets écologiques**.
 
-La composition respecte les objectifs de la **réglementation SFDR** en matière de transparence ESG. Elle pourrait aussi être compatible avec un label ISR (Investissement Socialement Responsable) en France.
+Ces éléments montrent une **volonté de conformité aux meilleures pratiques** de la finance durable française et européenne.
 """)
+
 
 # ======================
 # 📊 4. Suivi combiné des performances financières et ESG
@@ -206,6 +211,39 @@ if not actifs_filtres.empty:
     """)
 else:
     st.info("Aucun actif sélectionné pour afficher le tableau ESG/Finance.")
+
+# ======================
+# 📈 5. Visualisation croisée : Poids vs Score ESG
+# ======================
+st.header("📈 Visualisation croisée : Poids vs Score ESG")
+
+if not actifs_filtres.empty:
+    fig, ax = plt.subplots(figsize=(6, 4))
+    scatter = ax.scatter(
+        actifs_filtres["Score ESG"],
+        actifs_filtres["Poids"],
+        c=actifs_filtres["Poids"],
+        cmap="viridis",
+        s=100,
+        edgecolors='black'
+    )
+    for i, row in actifs_filtres.iterrows():
+        ax.annotate(row["Nom"], (row["Score ESG"], row["Poids"]), fontsize=8, alpha=0.7)
+
+    ax.set_xlabel("Score ESG (plus faible = meilleur)")
+    ax.set_ylabel("Poids dans le portefeuille")
+    ax.set_title("Corrélation entre la qualité ESG et la pondération")
+    ax.grid(True)
+    st.pyplot(fig)
+
+    st.markdown("""
+    👉 Ce graphique permet de **visualiser l'approche Best-in-Class** :  
+    Les entreprises avec un **meilleur score ESG (plus bas)** sont **plus fortement pondérées**,  
+    ce qui maximise l’impact positif du portefeuille.
+    """)
+else:
+    st.info("Aucun actif sélectionné pour afficher la corrélation Score ESG / Poids.")
+
 
 # ======================
 # Fin du rapport enrichi
@@ -304,3 +342,63 @@ else:
             # Détail par actif
             st.write("### 🔍 Détail par actif depuis 3 ans")
             st.dataframe(performance_par_actif.sort_values(ascending=False).map(lambda x: f"{x:.2%}"))
+
+
+# ======================
+# 🌡️ Climate VaR simplifiée
+# ======================
+st.header("🌡️ Climate VaR : Scénario de stress climatique")
+
+# Définir les secteurs sensibles
+secteurs_sensibles = ["Technologie", "Automobile", "Énergie"]  # énergie n'est pas présente ici mais prévu
+stress = []
+
+for i, row in actifs_filtres.iterrows():
+    secteur = row["Secteur"]
+    poids = row["Poids"]
+    if secteur in secteurs_sensibles:
+        perte = -0.10 * poids
+    else:
+        perte = -0.05 * poids
+    stress.append(perte)
+
+climate_var = sum(stress)
+
+st.metric(label="Perte simulée en cas de stress climatique", value=f"{climate_var:.2%}")
+st.markdown("""
+Ce scénario repose sur une hypothèse simple :
+- **-10%** pour les secteurs les plus exposés (Technologie, Automobile),
+- **-5%** pour les autres secteurs.
+
+Il permet une **première évaluation de la vulnérabilité climatique** du portefeuille.
+""")
+
+# ======================
+# 🔥 Température implicite
+# ======================
+st.subheader("🔥 Estimation de la température implicite du portefeuille")
+
+def score_to_temp(score):
+    if score < 15:
+        return 1.5
+    elif score < 20:
+        return 2.0
+    elif score < 25:
+        return 2.5
+    else:
+        return 3.0
+
+if not actifs_filtres.empty:
+    actifs_filtres["Température estimée"] = actifs_filtres["Score ESG"].apply(score_to_temp)
+    temp_implicite = np.average(actifs_filtres["Température estimée"], weights=actifs_filtres["Poids"])
+    st.metric(label="🌍 Température implicite du portefeuille", value=f"{temp_implicite:.2f}°C")
+    st.markdown("""
+    Cette **température implicite** est une **approximation pédagogique** basée sur le score ESG des actifs :
+    - Elle donne un **ordre de grandeur** de l’alignement climatique.
+    - Un objectif < 2°C est **cohérent avec l’Accord de Paris**.
+
+    👉 Le portefeuille est donc aligné à **{:.2f}°C**, ce qui permet d’estimer sa trajectoire climatique.
+    """.format(temp_implicite))
+else:
+    st.info("Aucun actif sélectionné pour estimer la température implicite.")
+
