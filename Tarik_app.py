@@ -14,19 +14,31 @@ actifs = pd.DataFrame({
     "Nom": [
         "Schneider Electric", "Danone", "L'Oréal", "Microsoft", "Tesla",
         "iShares ESG Aware MSCI USA ETF", "Vanguard ESG U.S. Stock ETF",
-        "iShares USD Green Bond ETF", "Toyota", "TSMC"
+        "iShares USD Green Bond ETF", "Toyota", "TSMC",
+        "Sony Group Corporation", "Tata Consultancy Services Limited"
     ],
-    "ISIN": ["SU.PA", "BN.PA", "OR.PA", "MSFT", "TSLA", "ESGU", "ESGV", "BGRN", "TM", "TSM"],
-    "Type": ["Action", "Action", "Action", "Action", "Action", "ETF", "ETF", "ETF", "Action", "Action"],
+    "ISIN": [
+        "SU.PA", "BN.PA", "OR.PA", "MSFT", "TSLA", "ESGU", "ESGV", "BGRN", "TM", "TSM",
+        "6758.T", "TCS.NS"
+    ],
+    "Type": [
+        "Action", "Action", "Action", "Action", "Action", "ETF", "ETF", "ETF", "Action", "Action",
+        "Action", "Action"
+    ],
     "Secteur": [
         "Gestion de l'énergie", "Agroalimentaire", "Cosmétique", "Technologie", "Automobile",
-        "Large-mid caps", "All caps", "Obligations vertes", "Automobile", "Technologie"
+        "Large-mid caps", "All caps", "Obligations vertes", "Automobile", "Technologie",
+        "Technologie", "Technologie"
     ],
     "Région": [
         "Europe", "Europe", "Europe", "Amérique", "Amérique",
-        "Amérique", "Amérique", "Amérique", "Asie", "Asie"
+        "Amérique", "Amérique", "Amérique", "Asie", "Asie",
+        "Asie", "Asie"
     ],
-    "ESG RISK RATING - Morningstar": [10.4, 18.01, 19.58, 17.34, 24.76, 19.73, 19.48, 18.96, 27.95, 15.19],
+    "ESG RISK RATING - Morningstar": [
+        10.4, 18.01, 19.58, 17.34, 24.76, 19.73, 19.48, 18.96, 27.95, 15.19,
+        17.0, 11.4
+    ],
     "Certifications": [
         "ISO 14001, ISO 50001, ISO 45001, ISO 26000",
         "ISO 14001, ISO 50001, ISO 45001, ISO 26000, B Corp, Entreprise à mission",
@@ -35,15 +47,20 @@ actifs = pd.DataFrame({
         "ISO 14001, ISO 50001, ISO 45001, ISO 26000",
         "Aucune", "Aucune", "Aucune",
         "ISO 14001",
-        "ISO 14001, ISO 50001, ISO 14064"
+        "ISO 14001, ISO 50001, ISO 14064",
+        "ISO 14001, ISO 50001",
+        "ISO 14001, ISO 26000"
     ],
     "ODD": [
         "7, 9, 11, 12, 13, 17", "2, 3, 6, 12, 13, 17", "3, 5, 6, 12, 13, 17",
         "7, 9, 13, 17", "7, 9, 13, 17", "7, 9, 12, 13",
-        "7, 9, 12, 13", "7, 9, 12, 13", "7, 9, 12, 13", "7, 9, 12, 13, 17"
+        "7, 9, 12, 13", "7, 9, 12, 13", "7, 9, 12, 13", "7, 9, 12, 13, 17",
+        "9, 12, 13", "8, 9, 13"
     ],
-    "MSCI IMPLIED TEMPERATURE RISE": [1.7, 2.4, 1.3, 1.4, 1.5, 2.7, "N.A", 2.7, 2.0, 2.5],
-    
+    "MSCI IMPLIED TEMPERATURE RISE": [
+        1.7, 2.4, 1.3, 1.4, 1.5, 2.7, "N.A", 2.7, 2.0, 2.5,
+        1.6, 1.7
+    ],
     "Critères environnementaux": [
         "Empreinte carbone réduite, 100 % énergies renouvelables, rapports ESG fréquents",
         "Neutralité carbone d'ici 2050, gestion de l'eau et des déchets, rapports ESG fréquents",
@@ -54,7 +71,9 @@ actifs = pd.DataFrame({
         "Faible exposition aux combustibles fossiles, rapports ESG fréquents",
         "Financement de projets écologiques, rapports ESG fréquents",
         "Réduction des émissions de CO2, préservation de l'eau et de la biodiversité, rapports ESG fréquents",
-        "Énergie renouvelable, gestion de l'eau, réduction des émissions de CO2"
+        "Énergie renouvelable, gestion de l'eau, réduction des émissions de CO2",
+        "Réduction des émissions de CO2, efficacité énergétique, gestion des déchets électroniques",
+        "Neutralité carbone, initiatives de développement durable, gestion de l'énergie"
     ],
     "Critères sociaux": [
         "Diversité et inclusion, conditions de travail responsables, éducation et formation",
@@ -66,9 +85,12 @@ actifs = pd.DataFrame({
         "Égalité des genres",
         "Financement de projets à impact social positif",
         "Diversité et inclusion, conditions de travail, engagement communautaire",
-        "Diversité et inclusion, bien-être des employés, engagement communautaire"
+        "Diversité et inclusion, bien-être des employés, engagement communautaire",
+        "Diversité et inclusion, conditions de travail équitables, engagement communautaire",
+        "Éducation et formation, inclusion numérique, responsabilité sociétale"
     ],
 })
+
 
 # ======================
 # Configuration de la page
@@ -127,11 +149,11 @@ if not actifs_filtres.empty:
 # ======================
 # Tableau des actifs sélectionnés
 # ======================
-st.header("📋 Actifs du portefeuille filtré")
+st.header("Actifs du portefeuille filtré")
 st.dataframe(actifs_filtres.reset_index(drop=True), use_container_width=True)
 
 # ======================
-# 🧠 Notre choix : création d’un portefeuille personnalisé
+# Notre choix : création d’un portefeuille personnalisé
 # ======================
 st.header("Notre approche : un portefeuille construit sur mesure")
 st.markdown("""
@@ -148,7 +170,7 @@ Nous avons donc défini nos propres critères de filtrage : type d’actif, scor
 # ======================
 # 📘 1. Explication de la stratégie ESG
 # ======================
-st.header("📘 Stratégie ESG du portefeuille")
+st.header("Stratégie ESG du portefeuille")
 st.markdown("""
 Ce portefeuille est construit selon une approche **best-in-class**, qui consiste à sélectionner les entreprises ayant les meilleurs scores ESG dans leur secteur.
 
@@ -163,7 +185,7 @@ Les données ESG sont issues de la notation **Morningstar**, combinée à des ce
 # ======================
 # 🌿 2. Analyse de l'impact ESG
 # ======================
-st.header("🌿 Analyse d'impact ESG")
+st.header("Analyse d'impact ESG")
 if not actifs_filtres.empty:
     score_moyen = round(actifs_filtres["Score ESG"].mean(), 2)
     st.markdown(f"**Score ESG moyen du portefeuille :** `{score_moyen}`")
@@ -185,7 +207,7 @@ else:
 # ======================
 # 🏷️ 3. Labels et certifications
 # ======================
-st.header("🏷️ Labels et certifications durables")
+st.header("🏷Labels et certifications durables")
 st.markdown("""
 Certains actifs du portefeuille disposent de **labels ou certifications reconnus**, renforçant leur crédibilité :
 
@@ -203,7 +225,7 @@ Ces éléments montrent une **volonté de conformité aux meilleures pratiques**
 # ======================
 # 📊 4. Suivi combiné des performances financières et ESG
 # ======================
-st.header("📊 Tableau de bord ESG & financier")
+st.header("Tableau de bord ESG & financier")
 if not actifs_filtres.empty:
     comparaison = actifs_filtres[["Nom", "Score ESG", "Poids"]].copy()
     comparaison = comparaison.sort_values(by="Poids", ascending=False)
@@ -218,7 +240,7 @@ else:
 # ======================
 # 📈 5. Visualisation croisée : Poids vs Score ESG
 # ======================
-st.header("📈 Visualisation croisée : Poids vs Score ESG")
+st.header("Visualisation croisée : Poids vs Score ESG")
 
 if not actifs_filtres.empty:
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -256,7 +278,7 @@ else:
 # ======================
 # Visualisation ESG
 # ======================
-st.header("📊 Visualisation ESG")
+st.header("Visualisation ESG")
 
 def draw_pie_chart(data, title, cmap):
     fig, ax = plt.subplots(figsize=(3, 3))
@@ -303,7 +325,7 @@ with col3:
 # ======================
 # 🔥 Température implicite (réelle MSCI si dispo, sinon estimation)
 # ======================
-st.subheader("🔥 Température implicite du portefeuille (source MSCI ou estimation)")
+st.subheader("Température implicite du portefeuille (source MSCI ou estimation)")
 
 def complete_temperature(row):
     try:
@@ -341,7 +363,7 @@ else:
 # ======================
 # Performances financières
 # ======================
-st.header("📈 Performances du portefeuille")
+st.header("Performances du portefeuille")
 
 end_date = datetime.datetime.today()
 start_date = end_date - datetime.timedelta(days=3*365)
@@ -375,21 +397,21 @@ else:
             st.metric(label="Valeure actuelle du portefeuille", value=f"{round(valeur_actuelle,2)}")
 
             # Évolution du portefeuille dans le temps
-            st.write("### 📉 Évolution de la valeur du portefeuille depuis 3 ans")
+            st.write("### Évolution de la valeur du portefeuille depuis 3 ans")
 
             valeur_portefeuille = data_weighted.sum(axis=1)
 
             st.line_chart(valeur_portefeuille)
 
             # Détail par actif
-            st.write("### 🔍 Détail par actif depuis 3 ans")
+            st.write("### Détail par actif depuis 3 ans")
             st.dataframe(performance_par_actif.sort_values(ascending=False).map(lambda x: f"{x:.2%}"))
 
 
 # ======================
 # 🌡️ Climate VaR : Scénario de stress climatique
 # ======================
-st.header("🌡️ Climate VaR : Scénario de stress climatique")
+st.header("🌡Climate VaR : Scénario de stress climatique")
 st.markdown("""
 La **Climate VaR (Value at Risk climatique)** est une estimation des pertes potentielles que subirait un portefeuille en cas de **choc climatique majeur**.
 
@@ -424,7 +446,7 @@ df_stress = pd.DataFrame(stress_details)
 perte_totale = df_stress["Impact portefeuille"].sum()
 
 import plotly.express as px
-st.metric(label="📉 Perte totale estimée en cas de choc climatique", value=f"{perte_totale:.2%}")
+st.metric(label="Perte totale estimée en cas de choc climatique", value=f"{perte_totale:.2%}")
 
 st.markdown("""
 Ce tableau montre l’impact simulé de ce stress sur chaque actif du portefeuille :
@@ -442,7 +464,7 @@ st.markdown("""
 - Cette estimation simplifiée montre comment les **secteurs sensibles aux régulations climatiques** pourraient amplifier les pertes.
 - Elle donne un aperçu utile de la **vulnérabilité climatique du portefeuille**, bien qu’elle ne remplace pas un modèle climatique complet (type Climate Value-at-Risk MSCI ou scénarios Net-Zero).
 
-👉 Ce type de simulation peut être adapté à des **scénarios physiques (ouragan, sécheresse)** ou **de politique climatique (taxe carbone, réglementation stricte)**.
+Ce type de simulation peut être adapté à des **scénarios physiques (ouragan, sécheresse)** ou **de politique climatique (taxe carbone, réglementation stricte)**.
 """)
 
 
