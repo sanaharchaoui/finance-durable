@@ -185,7 +185,7 @@ Les données ESG sont issues de la notation **Morningstar**, combinée à des ce
 # ======================
 # 🌿 2. Analyse de l'impact ESG
 # ======================
-st.header("Analyse d'impact ESG")
+st.header("1. Analyse d'impact ESG")
 if not actifs_filtres.empty:
     score_moyen = round(actifs_filtres["Score ESG"].mean(), 2)
     st.markdown(f"**Score ESG moyen du portefeuille :** `{score_moyen}`")
@@ -207,7 +207,7 @@ else:
 # ======================
 # 🏷️ 3. Labels et certifications
 # ======================
-st.header(" Labels et certifications durables")
+st.header("2. Labels et certifications durables")
 st.markdown("""
 Certains actifs du portefeuille disposent de **labels ou certifications reconnus**, renforçant leur crédibilité :
 
@@ -225,7 +225,7 @@ Ces éléments montrent une **volonté de conformité aux meilleures pratiques**
 # ======================
 # 📊 4. Suivi combiné des performances financières et ESG
 # ======================
-st.header("Tableau de bord ESG & financier")
+st.header("3. Tableau de bord ESG & financier")
 if not actifs_filtres.empty:
     comparaison = actifs_filtres[["Nom", "Score ESG", "Poids"]].copy()
     comparaison = comparaison.sort_values(by="Poids", ascending=False)
@@ -240,7 +240,7 @@ else:
 # ======================
 # 📈 5. Visualisation croisée : Poids vs Score ESG
 # ======================
-st.header("Visualisation croisée : Poids vs Score ESG")
+st.header("4. Visualisation croisée : Poids vs Score ESG")
 
 if not actifs_filtres.empty:
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -278,7 +278,7 @@ else:
 # ======================
 # Visualisation ESG
 # ======================
-st.header("Visualisation ESG")
+st.header("5. Visualisation ESG")
 
 def draw_pie_chart(data, title, cmap):
     fig, ax = plt.subplots(figsize=(3, 3))
@@ -347,7 +347,7 @@ Ces répartitions montrent que le portefeuille respecte les **principes de diver
 # ======================
 # 🔥 Température implicite (réelle MSCI si dispo, sinon estimation)
 # ======================
-st.subheader("Température implicite du portefeuille (source MSCI ou estimation)")
+st.subheader("6. Température implicite du portefeuille (source MSCI ou estimation)")
 
 def complete_temperature(row):
     try:
@@ -385,7 +385,7 @@ else:
 # ======================
 # Performances financières
 # ======================
-st.header("Performances du portefeuille")
+st.header("7. Performances du portefeuille")
 
 end_date = datetime.datetime.today()
 start_date = end_date - datetime.timedelta(days=3*365)
@@ -433,7 +433,7 @@ else:
 # ======================
 # 🌡️ Climate VaR : Scénario de stress climatique
 # ======================
-st.header("🌡Climate VaR : Scénario de stress climatique")
+st.header("8. Climate VaR : Scénario de stress climatique")
 st.markdown("""
 La **Climate VaR (Value at Risk climatique)** est une estimation des pertes potentielles que subirait un portefeuille en cas de **choc climatique majeur**.
 
