@@ -196,7 +196,6 @@ Certains actifs du portefeuille disposent de **labels ou certifications reconnus
 Ces éléments montrent une **volonté de conformité aux meilleures pratiques** de la finance durable française et européenne.
 """)
 
-
 # ======================
 # 📊 4. Suivi combiné des performances financières et ESG
 # ======================
