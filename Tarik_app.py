@@ -385,32 +385,62 @@ else:
 
 
 # ======================
-# 🌡️ Climate VaR simplifiée
+# 🌡️ Climate VaR : Scénario de stress climatique
 # ======================
 st.header("🌡️ Climate VaR : Scénario de stress climatique")
+st.markdown("""
+La **Climate VaR (Value at Risk climatique)** est une estimation des pertes potentielles que subirait un portefeuille en cas de **choc climatique majeur**.
 
-# Définir les secteurs sensibles
-secteurs_sensibles = ["Technologie", "Automobile", "Énergie"]  # énergie n'est pas présente ici mais prévu
-stress = []
+Nous avons simulé un **scénario de stress à court terme** :
+- **-10%** de perte sur les actifs exposés aux risques physiques et de transition (technologie, automobile, énergie),
+- **-5%** sur les autres secteurs.
+
+Ce scénario est **inspiré de la logique de risque de transition** décrite dans les cadres comme le **SFDR**, ou les modèles de **stress test climatique** évoqués dans les rapports MSCI ou de la BCE.
+""")
+
+# Définir les secteurs sensibles au stress climatique
+secteurs_sensibles = ["Technologie", "Automobile", "Énergie"]
+stress_details = []
 
 for i, row in actifs_filtres.iterrows():
     secteur = row["Secteur"]
     poids = row["Poids"]
     if secteur in secteurs_sensibles:
-        perte = -0.10 * poids
+        perte_pct = -0.10
     else:
-        perte = -0.05 * poids
-    stress.append(perte)
+        perte_pct = -0.05
+    perte_pondérée = perte_pct * poids
+    stress_details.append({
+        "Nom": row["Nom"],
+        "Secteur": secteur,
+        "Poids": poids,
+        "Perte % secteur": f"{perte_pct:.0%}",
+        "Impact portefeuille": perte_pondérée
+    })
 
-climate_var = sum(stress)
+df_stress = pd.DataFrame(stress_details)
+perte_totale = df_stress["Impact portefeuille"].sum()
 
-st.metric(label="Perte simulée en cas de stress climatique", value=f"{climate_var:.2%}")
+import plotly.express as px
+st.metric(label="📉 Perte totale estimée en cas de choc climatique", value=f"{perte_totale:.2%}")
+
 st.markdown("""
-Ce scénario repose sur une hypothèse simple :
-- **-10%** pour les secteurs les plus exposés (Technologie, Automobile),
-- **-5%** pour les autres secteurs.
+Ce tableau montre l’impact simulé de ce stress sur chaque actif du portefeuille :
+""")
+st.dataframe(df_stress[["Nom", "Secteur", "Poids", "Perte % secteur", "Impact portefeuille"]].sort_values(by="Impact portefeuille", ascending=True), use_container_width=True)
 
-Il permet une **première évaluation de la vulnérabilité climatique** du portefeuille.
+fig = px.bar(df_stress.sort_values(by="Impact portefeuille"),
+             x="Nom", y="Impact portefeuille", color="Secteur",
+             title="Impact du stress climatique par actif",
+             labels={"Impact portefeuille": "Perte simulée"}, height=400)
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("""
+💡 **Interprétation** :
+- Cette estimation simplifiée montre comment les **secteurs sensibles aux régulations climatiques** pourraient amplifier les pertes.
+- Elle donne un aperçu utile de la **vulnérabilité climatique du portefeuille**, bien qu’elle ne remplace pas un modèle climatique complet (type Climate Value-at-Risk MSCI ou scénarios Net-Zero).
+
+👉 Ce type de simulation peut être adapté à des **scénarios physiques (ouragan, sécheresse)** ou **de politique climatique (taxe carbone, réglementation stricte)**.
 """)
 
 
