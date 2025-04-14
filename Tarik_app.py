@@ -40,6 +40,8 @@ actifs = pd.DataFrame({
         "7, 9, 13, 17", "7, 9, 13, 17", "7, 9, 12, 13",
         "7, 9, 12, 13", "7, 9, 12, 13", "7, 9, 12, 13", "7, 9, 12, 13, 17"
     ],
+    "MSCI IMPLIED TEMPERATURE RISE": [1.7, 2.4, 1.3, 1.4, 1.5, 2.7, "N.A", 2.7, 2.0, 2.5],
+    
     "Critères environnementaux": [
         "Empreinte carbone réduite, 100 % énergies renouvelables, rapports ESG fréquents",
         "Neutralité carbone d'ici 2050, gestion de l'eau et des déchets, rapports ESG fréquents",
@@ -295,6 +297,45 @@ with col3:
     fig3 = draw_pie_chart(type_data, "Types d’actifs", plt.cm.Accent)
     st.pyplot(fig3)
 
+
+# ======================
+# 🔥 Température implicite (réelle MSCI si dispo, sinon estimation)
+# ======================
+st.subheader("🔥 Température implicite du portefeuille (source MSCI ou estimation)")
+
+def complete_temperature(row):
+    try:
+        temp = float(row["MSCI IMPLIED TEMPERATURE RISE"])
+        return temp
+    except:
+        score = row["Score ESG"]
+        if score < 15:
+            return 1.5
+        elif score < 20:
+            return 2.0
+        elif score < 25:
+            return 2.5
+        else:
+            return 3.0
+
+if not actifs_filtres.empty:
+    actifs_filtres["Température estimée"] = actifs_filtres.apply(complete_temperature, axis=1)
+    temp_implicite = np.average(actifs_filtres["Température estimée"], weights=actifs_filtres["Poids"])
+    st.metric(label="🌍 Température implicite du portefeuille", value=f"{temp_implicite:.2f}°C")
+    st.markdown(f"""
+    Cette température est calculée à partir de :
+    - La **donnée MSCI** lorsqu'elle est disponible (colonne *MSCI IMPLIED TEMPERATURE RISE*),
+    - Sinon, une **estimation pédagogique basée sur le score ESG** est utilisée.
+
+    👉 **Température moyenne pondérée du portefeuille :** `{temp_implicite:.2f}°C`
+
+    - Objectif de l'Accord de Paris : < **2°C**
+    - Température < 2°C = portefeuille aligné
+    """)
+else:
+    st.info("Aucun actif sélectionné pour estimer la température implicite.")
+
+
 # ======================
 # Performances financières
 # ======================
@@ -372,32 +413,4 @@ Ce scénario repose sur une hypothèse simple :
 Il permet une **première évaluation de la vulnérabilité climatique** du portefeuille.
 """)
 
-# ======================
-# 🔥 Température implicite
-# ======================
-st.subheader("🔥 Estimation de la température implicite du portefeuille")
-
-def score_to_temp(score):
-    if score < 15:
-        return 1.5
-    elif score < 20:
-        return 2.0
-    elif score < 25:
-        return 2.5
-    else:
-        return 3.0
-
-if not actifs_filtres.empty:
-    actifs_filtres["Température estimée"] = actifs_filtres["Score ESG"].apply(score_to_temp)
-    temp_implicite = np.average(actifs_filtres["Température estimée"], weights=actifs_filtres["Poids"])
-    st.metric(label="🌍 Température implicite du portefeuille", value=f"{temp_implicite:.2f}°C")
-    st.markdown("""
-    Cette **température implicite** est une **approximation pédagogique** basée sur le score ESG des actifs :
-    - Elle donne un **ordre de grandeur** de l’alignement climatique.
-    - Un objectif < 2°C est **cohérent avec l’Accord de Paris**.
-
-    👉 Le portefeuille est donc aligné à **{:.2f}°C**, ce qui permet d’estimer sa trajectoire climatique.
-    """.format(temp_implicite))
-else:
-    st.info("Aucun actif sélectionné pour estimer la température implicite.")
 
