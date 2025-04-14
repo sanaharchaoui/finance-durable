@@ -207,7 +207,7 @@ else:
 # ======================
 # 🏷️ 3. Labels et certifications
 # ======================
-st.header("🏷Labels et certifications durables")
+st.header(" Labels et certifications durables")
 st.markdown("""
 Certains actifs du portefeuille disposent de **labels ou certifications reconnus**, renforçant leur crédibilité :
 
@@ -262,7 +262,7 @@ if not actifs_filtres.empty:
     st.pyplot(fig)
 
     st.markdown("""
-    👉 Ce graphique permet de **visualiser l'approche Best-in-Class** :  
+    Ce graphique permet de **visualiser l'approche Best-in-Class** :  
     Les entreprises avec un **meilleur score ESG (plus bas)** sont **plus fortement pondérées**,  
     ce qui maximise l’impact positif du portefeuille.
     """)
@@ -320,6 +320,28 @@ with col3:
     type_data = actifs_filtres.groupby("Type")["Poids"].sum().sort_values(ascending=False)
     fig3 = draw_pie_chart(type_data, "Types d’actifs", plt.cm.Accent)
     st.pyplot(fig3)
+
+st.markdown("""
+---
+
+### **Analyse détaillée de la composition ESG**
+
+#### **Répartition sectorielle**
+Le portefeuille est largement exposé au **secteur technologique** (≈ 40 %), ce qui reflète le rôle clé des technologies dans la transition verte (efficacité énergétique, digitalisation responsable, neutralité carbone).  
+La présence d’autres secteurs tels que l’**automobile**, l’**agroalimentaire** et les **énergies** (via la gestion de l’énergie et obligations vertes) assure une **diversification raisonnable**.
+
+#### **Répartition géographique**
+Le portefeuille est bien réparti entre **Amérique (38 %)**, **Asie (32 %)** et **Europe (30 %)**, ce qui reflète une **diversification régionale équilibrée**.  
+L'ajout récent d’actifs asiatiques à faible température implicite (Sony, Infosys) a permis de **renforcer la couverture Asie** tout en **réduisant l’empreinte climatique globale** du portefeuille.
+
+#### **Répartition par type d’actif**
+La majorité des investissements sont concentrés sur des **actions individuelles (≈ 77 %)**, permettant un **contrôle fin des critères ESG** par actif.  
+Les **ETF (≈ 23 %)** complètent la structure avec une approche plus large et diversifiée, tout en intégrant des filtres ESG dans leur construction.
+
+---
+
+Ces répartitions montrent que le portefeuille respecte les **principes de diversification** tout en **optimisant l’impact ESG** selon une approche best-in-class.
+""")
 
 
 # ======================
