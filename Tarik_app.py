@@ -137,27 +137,13 @@ if odds:
 if Certifications:
     actifs_filtres = actifs_filtres[actifs_filtres["Certifications"].apply(lambda x: any(c.strip() in x for c in Certifications))]
 
-# Calcul des poids inversés des actifs filtrés
-if not actifs_filtres.empty:
-    # Calcul des poids inversés
-    actifs_filtres["Poids Inversés"] = 1 / actifs_filtres["Score ESG"]
-    
-    # Normalisation des poids (la somme des poids doit être égale à 1)
-    total_poids = actifs_filtres["Poids Inversés"].sum()
-    actifs_filtres["Poids"] = actifs_filtres["Poids Inversés"] / total_poids
-
-# ======================
-# Filtres Critères environnementaux et sociaux
-# ======================
-
 # Extraire toutes les valeurs uniques de critères environnementaux et sociaux
 env_criteres_uniques = sorted({crit for sous_liste in actifs["Critères environnementaux"] for crit in sous_liste})
 soc_criteres_uniques = sorted({crit for sous_liste in actifs["Critères sociaux"] for crit in sous_liste})
 
 # Ajout des filtres dans la sidebar
-st.sidebar.markdown("---")
-EnvCriteres = st.sidebar.multiselect("🌿 Critères environnementaux", options=env_criteres_uniques, default=[])
-SocCriteres = st.sidebar.multiselect("👥 Critères sociaux", options=soc_criteres_uniques, default=[])
+EnvCriteres = st.sidebar.multiselect("Critères environnementaux", options=env_criteres_uniques, default=[])
+SocCriteres = st.sidebar.multiselect("Critères sociaux", options=soc_criteres_uniques, default=[])
 
 # Appliquer les filtres si des critères sont sélectionnés
 if EnvCriteres:
@@ -169,6 +155,16 @@ if SocCriteres:
     actifs_filtres = actifs_filtres[
         actifs_filtres["Critères sociaux"].apply(lambda liste: any(crit in liste for crit in SocCriteres))
     ]
+
+# Calcul des poids inversés des actifs filtrés
+if not actifs_filtres.empty:
+    # Calcul des poids inversés
+    actifs_filtres["Poids Inversés"] = 1 / actifs_filtres["Score ESG"]
+    
+    # Normalisation des poids (la somme des poids doit être égale à 1)
+    total_poids = actifs_filtres["Poids Inversés"].sum()
+    actifs_filtres["Poids"] = actifs_filtres["Poids Inversés"] / total_poids
+
 
 
 # ======================
