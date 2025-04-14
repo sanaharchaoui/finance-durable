@@ -111,22 +111,32 @@ Types = st.sidebar.multiselect("Type d’actif", options=actifs["Type"].unique()
 Secteur = st.sidebar.multiselect("Secteur", options=actifs["Secteur"].unique(), default=actifs["Secteur"].unique())
 Region = st.sidebar.multiselect("Région", options=actifs["Région"].unique(), default=actifs["Région"].unique())
 
-# Flatten certifications (en séparant chaque certification individuelle)
+# Flatten certifications
 certifications_uniques = sorted({c.strip() for sublist in actifs["Certifications"].str.split(",") for c in sublist})
 Certifications = st.sidebar.multiselect("Certifications", options=certifications_uniques, default=[])
 
-# Extraire les ODD en liste
+# ODD
 odds_uniques = sorted({o.strip() for sublist in actifs["ODD"].str.split(",") for o in sublist})
 odds = st.sidebar.multiselect("ODD (Objectifs de Développement Durable)", options=odds_uniques, default=[])
 
+# Critères environnementaux et sociaux (placés ici AVANT le score ESG)
+env_criteres_uniques = sorted({crit for sous_liste in actifs["Critères environnementaux"] for crit in sous_liste})
+soc_criteres_uniques = sorted({crit for sous_liste in actifs["Critères sociaux"] for crit in sous_liste})
+
+EnvCriteres = st.sidebar.multiselect("Critères environnementaux", options=env_criteres_uniques, default=[])
+SocCriteres = st.sidebar.multiselect("Critères sociaux", options=soc_criteres_uniques, default=[])
+
+# Score ESG
 score_min = st.sidebar.slider("Score ESG maximum des actifs", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
 
-# Filtrage initial
+# ======================
+# Filtrage des actifs
+# ======================
 actifs_filtres = actifs[(
     actifs["Type"].isin(Types)) &
     (actifs["Secteur"].isin(Secteur)) &
     (actifs["Région"].isin(Region)) &
-    (actifs["Score ESG"] <= score_min)  # ESG RISK plus bas = meilleur score
+    (actifs["Score ESG"] <= score_min)
 ]
 
 # Filtrage ODD
@@ -137,34 +147,23 @@ if odds:
 if Certifications:
     actifs_filtres = actifs_filtres[actifs_filtres["Certifications"].apply(lambda x: any(c.strip() in x for c in Certifications))]
 
-# Extraire toutes les valeurs uniques de critères environnementaux et sociaux
-env_criteres_uniques = sorted({crit for sous_liste in actifs["Critères environnementaux"] for crit in sous_liste})
-soc_criteres_uniques = sorted({crit for sous_liste in actifs["Critères sociaux"] for crit in sous_liste})
-
-# Ajout des filtres dans la sidebar
-EnvCriteres = st.sidebar.multiselect("Critères environnementaux", options=env_criteres_uniques, default=[])
-SocCriteres = st.sidebar.multiselect("Critères sociaux", options=soc_criteres_uniques, default=[])
-
-# Appliquer les filtres si des critères sont sélectionnés
+# Filtrage environnemental
 if EnvCriteres:
     actifs_filtres = actifs_filtres[
         actifs_filtres["Critères environnementaux"].apply(lambda liste: any(crit in liste for crit in EnvCriteres))
     ]
 
+# Filtrage social
 if SocCriteres:
     actifs_filtres = actifs_filtres[
         actifs_filtres["Critères sociaux"].apply(lambda liste: any(crit in liste for crit in SocCriteres))
     ]
 
-# Calcul des poids inversés des actifs filtrés
+# Calcul des poids inversés
 if not actifs_filtres.empty:
-    # Calcul des poids inversés
     actifs_filtres["Poids Inversés"] = 1 / actifs_filtres["Score ESG"]
-    
-    # Normalisation des poids (la somme des poids doit être égale à 1)
     total_poids = actifs_filtres["Poids Inversés"].sum()
     actifs_filtres["Poids"] = actifs_filtres["Poids Inversés"] / total_poids
-
 
 
 # ======================
