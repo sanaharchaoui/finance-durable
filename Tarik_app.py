@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import numpy as np
 import datetime
+import plotly.express as px
+
 
 # ======================
 # Données ESG manuelles
