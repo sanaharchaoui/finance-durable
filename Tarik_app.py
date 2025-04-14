@@ -62,32 +62,33 @@ actifs = pd.DataFrame({
         1.6, 1.7
     ],
     "Critères environnementaux": [
-        "Empreinte carbone réduite, 100 % énergies renouvelables, rapports ESG fréquents",
-        "Neutralité carbone d'ici 2050, gestion de l'eau et des déchets, rapports ESG fréquents",
-        "Réduction des émissions de CO2, gestion de l'eau et des déchets, rapports ESG fréquents",
-        "Neutralité carbone, gestion de l'eau et des déchets, lutte contre le gaspillage, rapports ESG fréquents",
-        "Neutralité carbone, transition écologique, rapports ESG fréquents",
-        "Sélection d'entreprises ESG, rapports ESG fréquents",
-        "Faible exposition aux combustibles fossiles, rapports ESG fréquents",
-        "Financement de projets écologiques, rapports ESG fréquents",
-        "Réduction des émissions de CO2, préservation de l'eau et de la biodiversité, rapports ESG fréquents",
-        "Énergie renouvelable, gestion de l'eau, réduction des émissions de CO2",
-        "Réduction des émissions de CO2, efficacité énergétique, gestion des déchets électroniques",
-        "Neutralité carbone, initiatives de développement durable, gestion de l'énergie"
+        ["réduction des émissions de CO₂", "énergies renouvelables", "rapports ESG fréquents"],
+        ["neutralité carbone", "gestion de l’eau", "gestion des déchets", "rapports ESG fréquents"],
+        ["réduction des émissions de CO₂", "gestion de l’eau", "gestion des déchets", "rapports ESG fréquents"],
+        ["neutralité carbone", "gestion de l’eau", "gestion des déchets", "réduction du gaspillage", "rapports ESG fréquents"],
+        ["neutralité carbone", "transition écologique", "rapports ESG fréquents"],
+        ["entreprises ESG sélectionnées", "rapports ESG fréquents"],
+        ["faible exposition aux combustibles fossiles", "rapports ESG fréquents"],
+        ["financement de projets écologiques", "rapports ESG fréquents"],
+        ["réduction des émissions de CO₂", "gestion de l’eau", "biodiversité", "rapports ESG fréquents"],
+        ["énergies renouvelables", "gestion de l’eau", "réduction des émissions de CO₂"],
+        ["réduction des émissions de CO₂", "efficacité énergétique", "gestion des déchets électroniques"],
+        ["neutralité carbone", "développement durable", "gestion de l’énergie"]
     ],
+
     "Critères sociaux": [
-        "Diversité et inclusion, conditions de travail responsables, éducation et formation",
-        "Conditions de travail équitables, accès à la nutrition, engagement communautaire",
-        "Diversité et inclusion, responsabilité produit, bien-être des employés",
-        "Diversité et inclusion, protection des données et confidentialité",
-        "Diversité et inclusion, conditions de travail",
-        "Diversité et inclusion",
-        "Égalité des genres",
-        "Financement de projets à impact social positif",
-        "Diversité et inclusion, conditions de travail, engagement communautaire",
-        "Diversité et inclusion, bien-être des employés, engagement communautaire",
-        "Diversité et inclusion, conditions de travail équitables, engagement communautaire",
-        "Éducation et formation, inclusion numérique, responsabilité sociétale"
+        ["diversité et inclusion", "conditions de travail", "éducation et formation"],
+        ["conditions de travail", "accès à la nutrition", "engagement communautaire"],
+        ["diversité et inclusion", "responsabilité produit", "bien-être des employés"],
+        ["diversité et inclusion", "protection des données"],
+        ["diversité et inclusion", "conditions de travail"],
+        ["diversité et inclusion"],
+        ["égalité des genres"],
+        ["financement de projets à impact social positif"],
+        ["diversité et inclusion", "conditions de travail", "engagement communautaire"],
+        ["diversité et inclusion", "bien-être des employés", "engagement communautaire"],
+        ["diversité et inclusion", "conditions de travail", "engagement communautaire"],
+        ["éducation et formation", "inclusion numérique", "responsabilité sociétale"]
     ],
 })
 
@@ -145,6 +146,31 @@ if not actifs_filtres.empty:
     # Normalisation des poids (la somme des poids doit être égale à 1)
     total_poids = actifs_filtres["Poids Inversés"].sum()
     actifs_filtres["Poids"] = actifs_filtres["Poids Inversés"] / total_poids
+
+# ======================
+# Filtres Critères environnementaux et sociaux
+# ======================
+
+# Extraire toutes les valeurs uniques de critères environnementaux et sociaux
+env_criteres_uniques = sorted({crit for sous_liste in actifs["Critères environnementaux"] for crit in sous_liste})
+soc_criteres_uniques = sorted({crit for sous_liste in actifs["Critères sociaux"] for crit in sous_liste})
+
+# Ajout des filtres dans la sidebar
+st.sidebar.markdown("---")
+EnvCriteres = st.sidebar.multiselect("🌿 Critères environnementaux", options=env_criteres_uniques, default=[])
+SocCriteres = st.sidebar.multiselect("👥 Critères sociaux", options=soc_criteres_uniques, default=[])
+
+# Appliquer les filtres si des critères sont sélectionnés
+if EnvCriteres:
+    actifs_filtres = actifs_filtres[
+        actifs_filtres["Critères environnementaux"].apply(lambda liste: any(crit in liste for crit in EnvCriteres))
+    ]
+
+if SocCriteres:
+    actifs_filtres = actifs_filtres[
+        actifs_filtres["Critères sociaux"].apply(lambda liste: any(crit in liste for crit in SocCriteres))
+    ]
+
 
 # ======================
 # Tableau des actifs sélectionnés
