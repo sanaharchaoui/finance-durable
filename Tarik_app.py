@@ -502,7 +502,7 @@ fig = px.bar(df_stress.sort_values(by="Impact portefeuille"),
 st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("""
-💡 **Interprétation** :
+**Interprétation** :
 - Cette estimation simplifiée montre comment les **secteurs sensibles aux régulations climatiques** pourraient amplifier les pertes.
 - Elle donne un aperçu utile de la **vulnérabilité climatique du portefeuille**, bien qu’elle ne remplace pas un modèle climatique complet (type Climate Value-at-Risk MSCI ou scénarios Net-Zero).
 
