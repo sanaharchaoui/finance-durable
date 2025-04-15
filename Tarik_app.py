@@ -365,7 +365,7 @@ Ces répartitions montrent que le portefeuille respecte les **principes de diver
 
 
 # ======================
-# 🔥 Température implicite (réelle MSCI si dispo, sinon estimation)
+# Température implicite (réelle MSCI si dispo, sinon estimation)
 # ======================
 st.subheader("6. Température implicite du portefeuille (source MSCI ou estimation)")
 
@@ -387,13 +387,13 @@ def complete_temperature(row):
 if not actifs_filtres.empty:
     actifs_filtres["Température estimée"] = actifs_filtres.apply(complete_temperature, axis=1)
     temp_implicite = np.average(actifs_filtres["Température estimée"], weights=actifs_filtres["Poids"])
-    st.metric(label="🌍 Température implicite du portefeuille", value=f"{temp_implicite:.2f}°C")
+    st.metric(label="Température implicite du portefeuille", value=f"{temp_implicite:.2f}°C")
     st.markdown(f"""
     Cette température est calculée à partir de :
     - La **donnée MSCI** lorsqu'elle est disponible (colonne *MSCI IMPLIED TEMPERATURE RISE*),
     - Sinon, une **estimation pédagogique basée sur le score ESG** est utilisée.
 
-    👉 **Température moyenne pondérée du portefeuille :** `{temp_implicite:.2f}°C`
+    **Température moyenne pondérée du portefeuille :** `{temp_implicite:.2f}°C`
 
     - Objectif de l'Accord de Paris : < **2°C**
     - Température < 2°C = portefeuille aligné
@@ -451,7 +451,7 @@ else:
 
 
 # ======================
-# 🌡️ Climate VaR : Scénario de stress climatique
+# Climate VaR : Scénario de stress climatique
 # ======================
 st.header("8. Climate VaR : Scénario de stress climatique")
 st.markdown("""
